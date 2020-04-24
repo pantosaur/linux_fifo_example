@@ -10,6 +10,9 @@
 # Unignore Makefile
 !Makefile
 
+# Unignore LICENSE
+!LICENSE
+
 # Ignore dotfiles
 .*
 !.gitignore
