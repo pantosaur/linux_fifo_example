@@ -12,6 +12,7 @@
 
 # Ignore dotfiles
 .*
+!.gitignore
 
 # Ignore keys
 *.crt
