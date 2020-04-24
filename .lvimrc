@@ -1,0 +1,16 @@
+" Section: EzPz
+" **Auto-generated. Do not change or delete section header.
+let project_dir="/home/pierre/workspace/fifo_example/"
+
+let &tags = &tags . "," . project_dir . ".tags"
+setlocal tags+=~/.vim/tags/default/stdlib.tags
+setlocal tags+=~/.vim/tags/default/unistd.tags
+setlocal tags+=~/.vim/tags/default/stdio.tags
+setlocal tags+=~/.vim/tags/default/string.tags
+setlocal tags+=~/.vim/tags/default/sys.tags
+setlocal tags+=~/.vim/tags/default/fcntl.tags
+setlocal tags+=~/.vim/tags/default/signal.tags
+setlocal tags+=~/.vim/tags/default/poll.tags
+setlocal tags+=~/.vim/tags/default/errno.tags
+setlocal tags+=~/.vim/tags/default/openssl.tags
+" End: EzPz
