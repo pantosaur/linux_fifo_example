@@ -1,7 +1,7 @@
-targets = main
+targets = fifo_example
 objects = main.o
 
-main : main.o
+fifo_example : main.o
 	cc -o fifo_example main.o
 
 $(objects) : common.h

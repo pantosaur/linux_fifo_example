@@ -10,7 +10,6 @@
 #include <signal.h>
 #include <poll.h>
 #include <errno.h>
-#include <openssl/ssl.h>
 
 #include "common.h"
 
@@ -98,7 +97,6 @@ int main(int argc, char* argv[]){
 
   fds[3].fd = 0;
 
-  printf("entering loop\n");
 
   int n;
   while(1){
@@ -106,7 +104,6 @@ int main(int argc, char* argv[]){
       handle_error("poll");
 
     if (fds[0].revents & POLLIN){
-      printf("in\n");
       int b=0;
       b=read(fds[0].fd, buf, BUFLEN-1);
       buf[b] = '\0';
@@ -123,7 +120,6 @@ int main(int argc, char* argv[]){
 
 
     if (fds[1].revents & POLLOUT){
-      printf("out\n");
       int b;
       if ((b=write(fds[1].fd, stdinbuf, in_c)) == -1 && errno != EPIPE)
 	handle_error("write");
@@ -136,13 +132,11 @@ int main(int argc, char* argv[]){
     }
 
     if (fds[2].revents & POLLIN){
-      printf("signal\n");
       read(fds[2].fd, &info, sizeof(info));
       switch(info.ssi_signo){
 	case SIGINT:
 	  printf("received SIGINT, exiting...\n");
 	  for(int i=0; i<3; i++){
-	    printf("%d\n", fds[i].fd);
 	    if(fds[i].fd >= 3 && close(fds[i].fd) == -1)
 	      perror("close");
 	  }
@@ -151,7 +145,6 @@ int main(int argc, char* argv[]){
 	  return 0;
 	case SIGPIPE:
 	  dprintf(STDERR_FILENO, "read end of pipe closed\n");
-	  printf("wfd: %d\n", fds[1].fd);
 	  break;
 	default:
 	  //should not happen
@@ -163,7 +156,6 @@ int main(int argc, char* argv[]){
       break;
 
     if (fds[3].revents & POLLIN){
-      printf("stdin\n");
       //TODO: do something if buffer is full
       if((in_c+=read(fds[3].fd, stdinbuf+in_c, BUFLEN - in_c)) == -1)
 	handle_error("read");
@@ -171,19 +163,15 @@ int main(int argc, char* argv[]){
 	in_c = 0;
       else
 	fds[1].events |= POLLOUT;
-      printf("%d\n",in_c);
     }
     if (fds[3].revents & (POLLHUP | POLLERR | POLLNVAL))
       break;
 
     if (fds[0].fd < 0){
-      
       fds[0].fd = open(argv[1], O_RDONLY | O_NONBLOCK);
-      printf("rfd: %d\n", fds[0].fd);
     }
     if (fds[1].fd < 0){
       fds[1].fd = open(argv[2], O_WRONLY | O_NONBLOCK);
-      printf("wfd: %d\n", fds[1].fd);
     }
   } 
   for(int i=0; i<3; i++){
